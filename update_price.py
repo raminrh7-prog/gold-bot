@@ -1,11 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-import os
-from telegram import Bot
 
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-CHAT_ID = os.getenv("CHAT_ID")
+PRICE_FILE = "price.txt"
 
 def get_gold_price():
     try:
@@ -14,7 +11,7 @@ def get_gold_price():
             "User-Agent": "Mozilla/5.0",
             "Accept-Language": "fa-IR,fa;q=0.9"
         }
-        r = requests.get(url, headers=headers, timeout=10)
+        r = requests.get(url, headers=headers, timeout=10, proxies={"http": None, "https": None})
         r.encoding = "utf-8"
         soup = BeautifulSoup(r.text, "html.parser")
         text = soup.get_text(separator=" ")
@@ -27,9 +24,9 @@ def get_gold_price():
 def main():
     price = get_gold_price()
     if price:
+        with open(PRICE_FILE, "w", encoding="utf-8") as f:
+            f.write(price)
         print(f"Updated price: {price}")
-        bot = Bot(token=BOT_TOKEN)
-        bot.send_message(chat_id=CHAT_ID, text=f"💰 آخرین قیمت طلای ۱۸ عیار:\n{price} تومان")
     else:
         print("❌ قیمت پیدا نشد")
 

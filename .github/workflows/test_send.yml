@@ -1,0 +1,27 @@
+name: TestBotSend
+
+on:
+  workflow_dispatch:  # اجرا با دکمه Run workflow
+
+jobs:
+  send_test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install python-telegram-bot
+
+      - name: Run test_send.py
+        run: python test_send.py
+        env:
+          BOT_TOKEN: ${{ secrets.BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}

@@ -5,8 +5,8 @@ import os
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
 
-BOT_TOKEN = os.getenv("8380198058:AAEqXdH9g2FD8eVlClIVoPDUCYdFxmT_8BI")
-CHAT_ID = os.getenv("@raminrtm")  # برای کانال یا چت
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+CHAT_ID = os.getenv("CHAT_ID")  # برای کانال یا چت
 
 PRICE_FILE = "price.txt"  # فایلی که GitHub Actions قیمت را ذخیره می‌کند
 

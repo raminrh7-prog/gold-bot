@@ -2,7 +2,7 @@ name: UpdateGoldPrice
 
 on:
   schedule:
-    - cron: "*/5 * * * *"  # هر ۵ دقیقه یکبار
+    - cron: "*/5 * * * *"  # هر ۵ دقیقه اجرا می‌شود
   workflow_dispatch:
 
 jobs:

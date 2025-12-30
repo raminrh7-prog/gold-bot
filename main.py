@@ -1,21 +1,12 @@
-import requests
-from bs4 import BeautifulSoup
-import re
-import os
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update
 from telegram.ext import ApplicationBuilder, CommandHandler, CallbackQueryHandler, ContextTypes
+import os
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
-CHAT_ID = os.getenv("CHAT_ID")  # برای کانال یا چت
+CHAT_ID = os.getenv("CHAT_ID")
 
-PRICE_FILE = "price.txt"  # فایلی که GitHub Actions قیمت را ذخیره می‌کند
-
-# تابع خواندن قیمت ذخیره شده
-def read_price():
-    if os.path.exists(PRICE_FILE):
-        with open(PRICE_FILE, "r", encoding="utf-8") as f:
-            return f.read().strip()
-    return "❌ قیمت موجود نیست"
+# متغیر جهانی برای ذخیره آخرین قیمت
+LAST_PRICE = None
 
 # وقتی کاربر /start را می‌زند
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -27,10 +18,18 @@ async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 # وقتی کاربر دکمه را می‌زند
 async def button(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    global LAST_PRICE
     q = update.callback_query
     await q.answer()
-    last_price = read_price()
-    await q.message.reply_text(f"💰 آخرین قیمت طلای ۱۸ عیار:\n{last_price} تومان")
+    if LAST_PRICE:
+        await q.message.reply_text(f"💰 آخرین قیمت طلای ۱۸ عیار:\n{LAST_PRICE} تومان")
+    else:
+        await q.message.reply_text("❌ هنوز قیمت دریافت نشده است.")
+
+# آپدیت کردن قیمت (GitHub Actions آن را فراخوانی می‌کند)
+async def update_price_handler(update_price):
+    global LAST_PRICE
+    LAST_PRICE = update_price
 
 def main():
     app = ApplicationBuilder().token(BOT_TOKEN).build()

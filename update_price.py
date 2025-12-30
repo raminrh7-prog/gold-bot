@@ -1,8 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-import os
 from telegram import Bot
+import os
 
 BOT_TOKEN = os.getenv("BOT_TOKEN")
 CHAT_ID = os.getenv("CHAT_ID")
@@ -27,7 +27,7 @@ def get_gold_price():
 def main():
     price = get_gold_price()
     if price:
-        print(f"Updated price: {price}")
+        print(f"Sending price: {price}")
         bot = Bot(token=BOT_TOKEN)
         bot.send_message(chat_id=CHAT_ID, text=f"💰 آخرین قیمت طلای ۱۸ عیار:\n{price} تومان")
     else:
